@@ -1,0 +1,1498 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Álvaro · Baterista & Profesor</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter+Tight:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<script src="image-slot.js"></script>
+
+<style>
+  :root {
+    --bg: #f5efe4;
+    --bg-card: #ffffff;
+    --bg-warm: #ecdfc7;
+    --bg-deep: #1a1612;
+    --ink: #1a1612;
+    --ink-dim: #5a4f43;
+    --ink-faint: #998a76;
+    --rule: #e2d6bf;
+    --accent: #d2452a;
+    --accent-2: #2d6a4f;
+    --accent-3: #d4a83a;
+
+    --display: "Fraunces", Georgia, serif;
+    --sans: "Inter Tight", system-ui, sans-serif;
+
+    --maxw: 1240px;
+  }
+
+  body[data-theme="cream"] {
+    --bg: #f5efe4; --bg-card: #fff; --bg-warm: #ecdfc7; --bg-deep: #1a1612;
+    --ink: #1a1612; --ink-dim: #5a4f43; --ink-faint: #998a76; --rule: #e2d6bf;
+  }
+  body[data-theme="mint"] {
+    --bg: #ecf2ea; --bg-card: #fff; --bg-warm: #d9e5d3; --bg-deep: #1a2418;
+    --ink: #1a2418; --ink-dim: #4a5446; --ink-faint: #8a9583; --rule: #d4dccd;
+    --accent: #d2452a; --accent-2: #2d6a4f;
+  }
+  body[data-theme="paper"] {
+    --bg: #fafaf7; --bg-card: #fff; --bg-warm: #f0eee5; --bg-deep: #15140f;
+    --ink: #15140f; --ink-dim: #555248; --ink-faint: #9a978a; --rule: #ebe9df;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 16px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+  ::selection { background: var(--accent); color: #fff; }
+
+  a { color: inherit; text-decoration: none; }
+
+  /* ─── STICKY NAV ──────────────────────── */
+  .nav {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    backdrop-filter: blur(12px);
+    background: color-mix(in oklab, var(--bg) 78%, transparent);
+    border-bottom: 1px solid var(--rule);
+  }
+  .nav-inner {
+    max-width: var(--maxw);
+    margin: 0 auto;
+    padding: 14px 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 24px;
+  }
+  .nav-brand {
+    font-family: var(--display);
+    font-size: 18px;
+    font-style: italic;
+    font-weight: 500;
+  }
+  .nav-brand span { color: var(--accent); }
+  .nav-links {
+    display: flex;
+    gap: 4px;
+    font-size: 13px;
+    font-weight: 500;
+  }
+  .nav-links a {
+    padding: 8px 14px;
+    border-radius: 999px;
+    color: var(--ink-dim);
+    transition: all 0.2s;
+  }
+  .nav-links a:hover {
+    background: var(--bg-warm);
+    color: var(--ink);
+  }
+  .nav-print {
+    background: var(--bg-deep);
+    color: var(--bg);
+    border: none;
+    padding: 9px 16px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .nav-print:hover { background: var(--accent); }
+
+  .progress {
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    height: 2px;
+    width: 0%;
+    background: var(--accent);
+    transition: width 0.05s linear;
+  }
+
+  /* ─── PAGE WRAPPER ──────────────────── */
+  .page {
+    max-width: var(--maxw);
+    margin: 0 auto;
+    padding: 0 32px;
+  }
+
+  /* ─── HERO ─────────────────────────── */
+  .hero {
+    padding: 56px 0 40px;
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 48px;
+    align-items: center;
+  }
+  .hero-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--bg-warm);
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 20px;
+  }
+  .hero-eyebrow .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent-2);
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(1.4); }
+  }
+  .hero h1 {
+    font-family: var(--display);
+    font-weight: 500;
+    font-size: clamp(56px, 8vw, 104px);
+    line-height: 0.95;
+    letter-spacing: -0.025em;
+  }
+  .hero h1 em {
+    font-style: italic;
+    color: var(--accent);
+    font-weight: 400;
+  }
+  .hero h1 .title-instrument { color: #d2452a; }
+  .hero-tag {
+    margin-top: 18px;
+    font-size: 19px;
+    color: var(--ink-dim);
+    max-width: 52ch;
+    text-wrap: pretty;
+  }
+  .hero-tag b { color: var(--ink); font-weight: 600; }
+  .hero-meta {
+    margin-top: 24px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .chip {
+    background: var(--bg-card);
+    border: 1px solid var(--rule);
+    padding: 7px 14px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .chip svg { width: 14px; height: 14px; }
+
+  .hero-photo {
+    width: 100%;
+    aspect-ratio: 4/5;
+    border-radius: 24px;
+    overflow: hidden;
+    background: var(--bg-warm);
+    box-shadow: 0 30px 60px -30px rgba(0,0,0,0.25);
+    transform: rotate(2deg);
+    transition: transform 0.4s;
+  }
+  .hero-photo:hover { transform: rotate(0deg) scale(1.02); }
+  .hero-photo image-slot,
+  .hero-photo img { width: 100%; height: 100%; display: block; object-fit: cover; }
+
+  /* ─── PITCH STRIP ────────────────────── */
+  .pitch {
+    background: var(--bg-deep);
+    color: #f5efe4;
+    border-radius: 28px;
+    padding: 48px 56px;
+    margin: 24px 0 48px;
+    display: grid;
+    grid-template-columns: 1fr 280px;
+    gap: 48px;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .pitch::before {
+    content: "";
+    position: absolute;
+    right: -80px;
+    top: -80px;
+    width: 280px;
+    height: 280px;
+    border-radius: 50%;
+    background: var(--accent);
+    opacity: 0.15;
+  }
+  .pitch-quote {
+    font-family: var(--display);
+    font-size: clamp(24px, 2.6vw, 32px);
+    line-height: 1.3;
+    font-weight: 400;
+  }
+  .pitch-quote em { font-style: italic; color: var(--accent-3); }
+  .pitch-quote .road { color: #d4a83a; }
+  .pitch-aside {
+    font-size: 13px;
+    line-height: 1.5;
+    color: #c5b9a3;
+    border-left: 2px solid var(--accent-3);
+    padding-left: 20px;
+  }
+  .pitch-aside b { color: var(--accent-3); display: block; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 8px; font-weight: 600; }
+
+  /* ─── STATS ─────────────────────────── */
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 64px;
+  }
+  .stat {
+    background: var(--bg-card);
+    border: 1px solid var(--rule);
+    border-radius: 20px;
+    padding: 24px 22px;
+    transition: all 0.3s;
+    cursor: default;
+  }
+  .stat:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px -20px rgba(0,0,0,0.15);
+    border-color: var(--accent);
+  }
+  .stat-num {
+    font-family: var(--display);
+    font-size: 56px;
+    font-weight: 500;
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+  .stat-num em {
+    font-size: 0.4em;
+    color: var(--accent);
+    font-style: italic;
+    margin-left: 4px;
+  }
+  .stat-label {
+    font-size: 13px;
+    color: var(--ink-dim);
+    margin-top: 8px;
+    line-height: 1.4;
+  }
+
+  /* ─── SECTION HEAD ─────────────────── */
+  .section { margin-bottom: 80px; scroll-margin-top: 80px; }
+  .section-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 28px;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+  .section-eyebrow {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--accent);
+    margin-bottom: 8px;
+  }
+  .section-title {
+    font-family: var(--display);
+    font-size: clamp(36px, 4.5vw, 56px);
+    line-height: 1;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+  }
+  .section-title em { font-style: italic; color: var(--accent); }
+  .section-tag {
+    font-size: 14px;
+    color: var(--ink-dim);
+    background: var(--bg-card);
+    border: 1px solid var(--rule);
+    padding: 8px 14px;
+    border-radius: 999px;
+  }
+
+  /* ─── HERO GIG (Ruslana) ─────────────── */
+  .hero-gig {
+    background: var(--bg-deep);
+    color: #f5efe4;
+    border-radius: 28px;
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    margin-bottom: 16px;
+    position: relative;
+  }
+  .hero-gig-media {
+    aspect-ratio: 4/3;
+    background: linear-gradient(135deg, #2a1f1a, #1a1612);
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-gig-media image-slot,
+  .hero-gig-media img { width: 100%; height: 100%; display: block; object-fit: cover; }
+  .hero-gig-media .star-badge {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background: var(--accent);
+    color: #fff;
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    z-index: 2;
+  }
+  .hero-gig-body {
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .hero-gig-body h3 {
+    font-family: var(--display);
+    font-size: 48px;
+    font-weight: 500;
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+  .hero-gig-body h3 em { font-style: italic; color: var(--accent-3); }
+  .hero-gig-body .role {
+    font-size: 14px;
+    color: #c5b9a3;
+    margin-bottom: 24px;
+  }
+  .hero-gig-body p {
+    font-size: 15px;
+    line-height: 1.6;
+    color: #c5b9a3;
+    margin-bottom: 24px;
+    max-width: 42ch;
+  }
+  .venues-row {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .venue-tag {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    padding: 12px 16px;
+    border-radius: 14px;
+    flex: 1;
+    min-width: 130px;
+  }
+  .venue-tag .cap {
+    font-family: var(--display);
+    font-size: 28px;
+    font-weight: 500;
+    color: var(--accent-3);
+    line-height: 1;
+  }
+  .venue-tag .name {
+    font-size: 13px;
+    color: #f5efe4;
+    margin-top: 4px;
+    font-weight: 500;
+  }
+  .venue-tag .city {
+    font-size: 11px;
+    color: #998a76;
+    margin-top: 1px;
+  }
+
+  /* ─── GIG CARDS GRID ───────────────── */
+  .gig-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+  }
+  .gig-card {
+    background: var(--bg-card);
+    border: 1px solid var(--rule);
+    border-radius: 20px;
+    overflow: hidden;
+    transition: all 0.3s;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+  }
+  .gig-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px -20px rgba(0,0,0,0.18);
+  }
+  .gig-card .media {
+    aspect-ratio: 16/10;
+    background: var(--bg-warm);
+    position: relative;
+    overflow: hidden;
+  }
+  .gig-card .media image-slot,
+  .gig-card .media img { width: 100%; height: 100%; display: block; object-fit: cover; }
+  .gig-card .label-band {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: var(--bg-deep);
+    color: #fff;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 5px 10px;
+    border-radius: 999px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    z-index: 2;
+  }
+  .gig-card .body {
+    padding: 20px 22px 22px;
+  }
+  .gig-card h4 {
+    font-family: var(--display);
+    font-size: 26px;
+    font-weight: 500;
+    line-height: 1.1;
+    margin-bottom: 4px;
+  }
+  .gig-card h4 em { font-style: italic; color: var(--accent); }
+  .gig-card .role {
+    font-size: 13px;
+    color: var(--ink-dim);
+    margin-bottom: 12px;
+  }
+  .gig-card .meta {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    font-size: 11px;
+    color: var(--ink-faint);
+  }
+  .gig-card .meta span {
+    background: var(--bg-warm);
+    padding: 4px 9px;
+    border-radius: 6px;
+    font-weight: 500;
+  }
+
+  /* ─── VIDEO / MEDIA GALLERY ───────── */
+  .media-gallery {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+  }
+  .media-card {
+    background: var(--bg-deep);
+    border-radius: 20px;
+    overflow: hidden;
+    aspect-ratio: 16/10;
+    position: relative;
+    cursor: pointer;
+    transition: transform 0.3s;
+  }
+  .media-card:hover { transform: scale(1.02); }
+  .media-card image-slot,
+  .media-card img { width: 100%; height: 100%; display: block; object-fit: cover; }
+  .media-card .play {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    z-index: 2;
+  }
+  .media-card .play-btn {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.95);
+    backdrop-filter: blur(10px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.3s;
+  }
+  .media-card:hover .play-btn { transform: scale(1.15); background: var(--accent); }
+  .media-card:hover .play-btn svg path { fill: #fff; }
+  .media-card .play-btn svg { width: 22px; height: 22px; margin-left: 3px; }
+  .media-card .caption {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 16px 18px;
+    background: linear-gradient(to top, rgba(0,0,0,0.85), transparent);
+    color: #fff;
+    z-index: 2;
+  }
+  .media-card .caption .t {
+    font-family: var(--display);
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 1.15;
+  }
+  .media-card .caption .s {
+    font-size: 11px;
+    opacity: 0.7;
+    margin-top: 2px;
+  }
+  .media-add {
+    background: var(--bg-card);
+    border: 2px dashed var(--rule);
+    border-radius: 20px;
+    aspect-ratio: 16/10;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    color: var(--ink-faint);
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+    padding: 20px;
+  }
+  .media-add:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: var(--bg-warm);
+  }
+  .media-add .ico {
+    width: 40px; height: 40px; border-radius: 50%;
+    background: var(--bg-warm);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+  }
+  .media-add:hover .ico { background: var(--accent); color: #fff; }
+  .media-add .t { font-family: var(--display); font-size: 18px; font-weight: 500; color: var(--ink); }
+  .media-add .s { font-size: 12px; max-width: 24ch; }
+
+  /* video modal/player */
+  .video-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.85);
+    backdrop-filter: blur(8px);
+    z-index: 200;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 32px;
+  }
+  .video-modal.open { display: flex; }
+  .video-modal-inner {
+    width: 100%;
+    max-width: 960px;
+    background: #000;
+    border-radius: 20px;
+    overflow: hidden;
+    aspect-ratio: 16/9;
+    position: relative;
+  }
+  .video-modal iframe {
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+  .video-modal .close {
+    position: absolute;
+    top: -44px;
+    right: 0;
+    background: rgba(255,255,255,0.1);
+    color: #fff;
+    border: none;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 18px;
+  }
+
+  /* ─── COLLAB BAR ─────────────────── */
+  .collab-bar {
+    background: var(--bg-warm);
+    border-radius: 20px;
+    padding: 22px 28px;
+    margin-bottom: 16px;
+    overflow: hidden;
+  }
+  .collab-bar .label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--ink-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    margin-bottom: 12px;
+  }
+  .collab-bar .row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 18px;
+    font-family: var(--display);
+    font-size: clamp(22px, 3vw, 36px);
+    line-height: 1.1;
+    align-items: baseline;
+  }
+  .collab-bar .row span {
+    transition: color 0.2s, transform 0.2s;
+    cursor: default;
+  }
+  .collab-bar .row span:hover { color: var(--accent); transform: translateY(-2px); }
+  .collab-bar .row .star { color: var(--accent); font-style: italic; }
+  .collab-bar .row .sep { color: var(--ink-faint); font-size: 0.5em; }
+
+  /* ─── PEDAGOGY SECTION ─────────── */
+  .ped-grid {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 14px;
+  }
+  .ped-card {
+    background: var(--bg-card);
+    border: 1px solid var(--rule);
+    border-radius: 24px;
+    padding: 36px;
+    position: relative;
+    overflow: hidden;
+  }
+  .ped-card.feature {
+    background: var(--accent-2);
+    color: #f5efe4;
+    border-color: transparent;
+  }
+  .ped-card.feature .ped-badge { background: rgba(255,255,255,0.18); color: #fff; }
+  .ped-badge {
+    display: inline-block;
+    background: var(--bg-warm);
+    color: var(--ink);
+    padding: 5px 12px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+  .ped-card h3 {
+    font-family: var(--display);
+    font-size: 38px;
+    font-weight: 500;
+    line-height: 1.05;
+    margin-bottom: 8px;
+  }
+  .ped-card h3 em { font-style: italic; color: var(--accent-3); }
+  .ped-card.feature h3 em { color: #f5efe4; }
+  .ped-card .role {
+    font-size: 14px;
+    opacity: 0.8;
+    margin-bottom: 18px;
+  }
+  .ped-card p {
+    font-size: 15px;
+    line-height: 1.6;
+    margin-bottom: 18px;
+    max-width: 42ch;
+    opacity: 0.9;
+  }
+  .ped-card ul {
+    list-style: none;
+    display: grid;
+    gap: 10px;
+  }
+  .ped-card li {
+    font-size: 14px;
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+  }
+  .ped-card li::before {
+    content: "→";
+    color: var(--accent);
+    flex-shrink: 0;
+  }
+  .ped-card.feature li::before { color: var(--accent-3); }
+
+  /* ─── METHOD / FORMACION ─────── */
+  .method-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-bottom: 24px;
+  }
+  .school-card {
+    background: var(--bg-card);
+    border: 1px solid var(--rule);
+    border-radius: 20px;
+    padding: 28px;
+    position: relative;
+    overflow: hidden;
+  }
+  .school-card .years {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--accent);
+    margin-bottom: 12px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .school-card h4 {
+    font-family: var(--display);
+    font-size: 32px;
+    line-height: 1.05;
+    font-weight: 500;
+    margin-bottom: 6px;
+  }
+  .school-card .with {
+    font-size: 14px;
+    color: var(--ink-dim);
+    margin-bottom: 14px;
+  }
+  .school-card .with b {
+    color: var(--ink);
+    font-weight: 600;
+    font-style: italic;
+    font-family: var(--display);
+    font-size: 18px;
+  }
+  .school-card p {
+    font-size: 13.5px;
+    color: var(--ink-dim);
+    line-height: 1.55;
+  }
+
+  /* book chips */
+  .books {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .book {
+    background: var(--bg-card);
+    border: 1px solid var(--rule);
+    border-radius: 14px;
+    padding: 14px 18px;
+    display: flex;
+    flex-direction: column;
+    min-width: 200px;
+    transition: all 0.2s;
+  }
+  .book:hover {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+  }
+  .book .t {
+    font-family: var(--display);
+    font-size: 18px;
+    font-weight: 500;
+    font-style: italic;
+  }
+  .book .a {
+    font-size: 11px;
+    color: var(--ink-dim);
+    margin-top: 2px;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  /* ─── SKILLS ───────────────────── */
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+  }
+  .skill-card {
+    background: var(--bg-card);
+    border: 1px solid var(--rule);
+    border-radius: 18px;
+    padding: 22px 24px;
+  }
+  .skill-card h5 {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--accent);
+    margin-bottom: 12px;
+    font-weight: 600;
+  }
+  .skill-card ul {
+    list-style: none;
+    display: grid;
+    gap: 6px;
+  }
+  .skill-card li {
+    font-family: var(--display);
+    font-size: 19px;
+    font-weight: 500;
+    line-height: 1.25;
+  }
+
+  /* style chips */
+  .styles {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 22px;
+  }
+  .style {
+    padding: 9px 16px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 600;
+    background: var(--bg-card);
+    border: 1px solid var(--rule);
+    transition: all 0.2s;
+    cursor: default;
+  }
+  .style:hover { transform: translateY(-2px); }
+  .style.primary {
+    background: var(--accent);
+    color: #fff;
+    border-color: var(--accent);
+  }
+
+  /* ─── CTA / CONTACT ────────────── */
+  .cta {
+    background: var(--bg-deep);
+    color: #f5efe4;
+    border-radius: 28px;
+    padding: 56px;
+    margin-bottom: 24px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .cta::before {
+    content: "";
+    position: absolute;
+    left: -100px;
+    bottom: -100px;
+    width: 320px;
+    height: 320px;
+    border-radius: 50%;
+    background: var(--accent-2);
+    opacity: 0.25;
+  }
+  .cta h2 {
+    font-family: var(--display);
+    font-size: clamp(40px, 5vw, 64px);
+    line-height: 1;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    position: relative;
+  }
+  .cta h2 em { font-style: italic; color: var(--accent-3); }
+  .contact-list {
+    display: grid;
+    gap: 10px;
+    position: relative;
+  }
+  .contact-row {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 14px;
+    padding: 14px 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.2s;
+  }
+  .contact-row:hover {
+    background: rgba(255,255,255,0.1);
+    border-color: var(--accent-3);
+    transform: translateX(4px);
+  }
+  .contact-row .lbl {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: #998a76;
+    font-weight: 600;
+  }
+  .contact-row .val {
+    font-family: var(--display);
+    font-size: 18px;
+    font-weight: 500;
+  }
+
+  .footer {
+    text-align: center;
+    padding: 24px 0 48px;
+    font-size: 12px;
+    color: var(--ink-faint);
+  }
+  .footer b { color: var(--ink-dim); font-weight: 600; }
+
+  /* ─── RESPONSIVE ──────────── */
+  @media (max-width: 960px) {
+    .hero { grid-template-columns: 1fr; }
+    .hero-photo { max-width: 280px; transform: rotate(0); }
+    .pitch, .hero-gig, .ped-grid, .cta { grid-template-columns: 1fr; }
+    .pitch, .cta { padding: 32px; }
+    .gig-grid, .media-gallery { grid-template-columns: repeat(2, 1fr); }
+    .stats-row { grid-template-columns: repeat(2, 1fr); }
+    .method-row { grid-template-columns: 1fr; }
+    .nav-links { display: none; }
+  }
+  @media (max-width: 600px) {
+    .gig-grid, .media-gallery, .skills-grid { grid-template-columns: 1fr; }
+    .page { padding: 0 20px; }
+  }
+
+  /* ─── PRINT ──────────────── */
+  @media print {
+    @page { size: A4; margin: 12mm; }
+    body { background: #fff !important; font-size: 10pt; --bg: #fff; --bg-card: #fff; --bg-warm: #f7f3ea; --bg-deep: #1a1612; }
+    .nav, [data-no-print] { display: none !important; }
+    .page { padding: 0; max-width: 100%; }
+    .section { margin-bottom: 16pt; break-inside: avoid; }
+    .hero { padding: 0 0 14pt; gap: 18pt; grid-template-columns: 1fr 200px; }
+    .hero h1 { font-size: 36pt !important; }
+    .hero-photo { transform: none; aspect-ratio: 1/1.1; max-width: 200px; box-shadow: none; }
+    .pitch { padding: 18pt; gap: 18pt; }
+    .pitch-quote { font-size: 13pt; }
+    .stats-row { gap: 8pt; margin-bottom: 16pt; }
+    .stat { padding: 10pt; }
+    .stat-num { font-size: 24pt; }
+    .section-title { font-size: 20pt !important; }
+    .hero-gig { grid-template-columns: 1fr 1.4fr; }
+    .hero-gig-body { padding: 18pt; }
+    .hero-gig-body h3 { font-size: 22pt; }
+    .gig-grid { grid-template-columns: repeat(3, 1fr); gap: 8pt; }
+    .gig-card .media { aspect-ratio: 16/10; }
+    .gig-card .body { padding: 12pt; }
+    .gig-card h4 { font-size: 14pt; }
+    .media-gallery, .media-add { display: none !important; }
+    .ped-card { padding: 14pt; }
+    .ped-card h3 { font-size: 18pt; }
+    .school-card { padding: 14pt; }
+    .school-card h4 { font-size: 16pt; }
+    .cta { padding: 24pt; }
+    .cta h2 { font-size: 24pt !important; }
+    .video-modal, .tweaks-fab { display: none !important; }
+  }
+</style>
+</head>
+<body data-theme="cream">
+
+<!-- NAV -->
+<nav class="nav" data-no-print>
+  <div class="nav-inner">
+    <div class="nav-brand">Álvaro <span>·</span> <em>baterista</em></div>
+    <div class="nav-links">
+      <a href="#sobre">Sobre mí</a>
+      <a href="#directo">Directo</a>
+      <a href="#aula">En el aula</a>
+      <a href="#formacion">Formación</a>
+      <a href="#contacto">Contacto</a>
+    </div>
+    <button class="nav-print" onclick="window.print()">Descargar PDF ↓</button>
+  </div>
+  <div class="progress" id="progress"></div>
+</nav>
+
+<main class="page" data-screen-label="01 CV Álvaro">
+
+  <!-- HERO -->
+  <section class="hero" id="sobre">
+    <div>
+      <div class="hero-eyebrow">
+        <span class="dot"></span>
+        Disponible para clases &amp; sesión · Madrid
+      </div>
+      <h1>Álvaro Galán
+<span class="title-instrument">batería</span>&nbsp;&amp; profesor</h1>
+      <p class="hero-tag">23 años. <b>Más de una década</b> tocando la batería —del local de ensayo a Las Ventas— y <b>4 años</b> formando a la próxima generación.</p>
+      <div class="hero-meta">
+        <span class="chip">🥁 En activo desde 2021</span>
+        <span class="chip">🎤 +70 conciertos / 2 años</span>
+        <span class="chip">🎓 Profesor en GSD Valdebebas</span>
+        <span class="chip">📱 +50K seguidores · IG &amp; TikTok</span>
+      </div>
+    </div>
+    <div class="hero-photo">
+      <img src="foto-perfil.jpg" alt="Foto de Álvaro" loading="eager" />
+    </div>
+  </section>
+
+  <!-- PITCH STRIP -->
+  <section class="pitch">
+    <p class="pitch-quote">Llevo a clase <span class="road">todo lo que aprendo en la carretera</span> — enseño batería de forma real y práctica, enfocándome en que el alumno se divierta, encuentre su propio estilo y pierda el miedo a tocar en directo.</p>
+    <div class="pitch-aside">
+      <b>Mi enfoque</b>
+      Cada clase es una mini-prueba de sonido: lectura, técnica y repertorio real desde el primer mes.
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <section class="stats-row" style="grid-template-columns:repeat(5,1fr);">
+    <div class="stat">
+      <div class="stat-num">12<em>años</em></div>
+      <div class="stat-label">A la batería desde los 12</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">70<em>+</em></div>
+      <div class="stat-label">Conciertos en los últimos 2 años</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">3.5<em>k</em></div>
+      <div class="stat-label">Aforo máximo (Las Ventas)</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">50<em>K+</em></div>
+      <div class="stat-label">Seguidores en IG &amp; TikTok</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">4<em>años</em></div>
+      <div class="stat-label">Como profesor de batería</div>
+    </div>
+  </section>
+
+  <!-- DIRECTO -->
+  <section class="section" id="directo">
+    <div class="section-head">
+      <div>
+        <div class="section-eyebrow">— Trayectoria artística</div>
+        <h2 class="section-title">En <em>directo</em></h2>
+      </div>
+      <div class="section-tag">+70 conciertos · gira nacional</div>
+    </div>
+
+    <!-- Featured Ruslana -->
+    <div class="hero-gig">
+      <div class="hero-gig-media">
+        <span class="star-badge">★ Hito de carrera</span>
+        <img src="ruslana.jpeg" alt="Ruslana · foto / cartel del show" loading="lazy" />
+      </div>
+      <div class="hero-gig-body">
+        <h3>Ruslana <em>·</em> gira nacional</h3>
+        <div class="role">Batería titular · Desde 2024 — Actualidad</div>
+        <p>Baterista titular en la gira nacional de Ruslana (3ª finalista Operación Triunfo 2023), con una trayectoria de más de 70 conciertos bajo el sello de Universal Music.</p>
+        <div class="venues-row">
+          <div class="venue-tag">
+            <div class="cap">3 500</div>
+            <div class="name">Las Ventas</div>
+            <div class="city">Madrid</div>
+          </div>
+          <div class="venue-tag">
+            <div class="cap">2 200</div>
+            <div class="name">Razzmatazz</div>
+            <div class="city">Barcelona</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Other gigs -->
+    <div class="gig-grid">
+      <article class="gig-card">
+        <div class="media">
+          <span class="label-band">MI BANDA</span>
+          <img src="yel.jpg" alt="YEL · foto / portada" loading="lazy" />
+        </div>
+        <div class="body">
+          <h4>YEL</h4>
+          <div class="role">Batería de la banda — grabación &amp; directo</div>
+          <div class="meta">
+            <span>Disco íntegro</span>
+            <span>Estudio</span>
+            <span>2024 →</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="gig-card">
+        <div class="media">
+          <span class="label-band">POP ROCK</span>
+          <img src="denaial.jpg" alt="Denaial" loading="lazy" />
+        </div>
+        <div class="body">
+          <h4>Denaial</h4>
+          <div class="role">Batería en directo — Actualidad</div>
+          <div class="meta">
+            <span>Gira nacional</span>
+            <span>2026 →</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="gig-card">
+        <div class="media">
+          <span class="label-band">SONIDO MUCHACHO</span>
+          <img src="shakeitmila.JPG" alt="Shakeitmila" loading="lazy" />
+        </div>
+        <div class="body">
+          <h4>Shakeitmila</h4>
+          <div class="role">Batería en directo — 2023</div>
+          <div class="meta">
+            <span>Indie Pop</span>
+            <span>2023</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="gig-card">
+        <div class="media">
+          <span class="label-band">J-ROCK</span>
+          <img src="bristol.jpg" alt="BRiSTOL" loading="lazy" />
+        </div>
+        <div class="body">
+          <h4>BRiSTOL</h4>
+          <div class="role">Batería en directo — 2024</div>
+          <div class="meta"><span>Banda de J-Rock &amp; Metalcore</span></div>
+        </div>
+      </article>
+
+      <article class="gig-card">
+        <div class="media">
+          <span class="label-band">URBANO</span>
+          <img src="la-blame.JPG" alt="LaBlame" loading="lazy" />
+        </div>
+        <div class="body">
+          <h4>LaBlame</h4>
+          <div class="role">Batería en directo — Actualidad</div>
+          <div class="meta"><span>2024 →</span></div>
+        </div>
+      </article>
+
+      <article class="gig-card">
+        <div class="media" style="background:var(--bg-warm);display:flex;align-items:center;justify-content:center;">
+          <div style="font-family:var(--display);font-size:48px;color:var(--accent);font-style:italic;">+más</div>
+        </div>
+        <div class="body">
+          <h4>Sesiones &amp; sustituciones</h4>
+          <div class="role">Bandas tributo, proyectos propios, colaboraciones</div>
+          <div class="meta">
+            <span>Desde 2021</span>
+            <span>Madrid</span>
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- COLLABORATIONS BAR -->
+  <section class="collab-bar">
+    <div class="label">Colaboraciones &amp; bandas</div>
+    <div class="row">
+      <span class="star">Ruslana</span>
+      <span class="sep">/</span>
+      <span>YEL</span>
+      <span class="sep">/</span>
+      <span>Denaial</span>
+      <span class="sep">/</span>
+      <span>Shakeitmila</span>
+      <span class="sep">/</span>
+      <span>BRiSTOL</span>
+      <span class="sep">/</span>
+      <span>LaBlame</span>
+    </div>
+  </section>
+
+  <!-- AULA / DOCENCIA -->
+  <section class="section" id="aula">
+    <div class="section-head">
+      <div>
+        <div class="section-eyebrow">— Trayectoria pedagógica</div>
+        <h2 class="section-title">En el <em>aula</em></h2>
+      </div>
+      <div class="section-tag">4 años de docencia activa</div>
+    </div>
+
+    <div class="ped-grid">
+      <div class="ped-card feature">
+        <div class="ped-badge">Actualidad</div>
+        <h3>Profesor en <em>GSD Valdebebas</em></h3>
+        <div class="role">Departamento de música moderna</div>
+        <p>Clases individuales y grupales. Diseño curricular por niveles, evaluación, preparación para conjuntos instrumentales y conciertos del centro.</p>
+        <ul>
+          <li>Programa basado en <b>repertorio actual</b> y lectura aplicada</li>
+          <li>Integración de técnica, groove y musicalidad</li>
+          <li>Preparación para tocar en banda desde nivel inicial</li>
+        </ul>
+      </div>
+
+      <div class="ped-card">
+        <div class="ped-badge">Desde 2022</div>
+        <h3>Clases <em>particulares</em></h3>
+        <div class="role">Estudio propio · alumnos de todas las edades</div>
+        <p>Metodología propia con un único objetivo: que el alumno sea capaz de defender un repertorio en un escenario.</p>
+        <ul>
+          <li>Click &amp; secuencias desde el primer mes</li>
+          <li>Repertorio elegido por el alumno</li>
+          <li>Simulacro de ensayo profesional</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- FORMACION -->
+  <section class="section" id="formacion">
+    <div class="section-head">
+      <div>
+        <div class="section-eyebrow">— Mi escuela</div>
+        <h2 class="section-title">Formación <em>especializada</em></h2>
+      </div>
+      <div class="section-tag">Música moderna de alto rendimiento</div>
+    </div>
+
+    <div class="method-row">
+      <div class="school-card">
+        <div class="years">2018 — 2022 · 4 años</div>
+        <h4>EMA Drum School</h4>
+        <p class="with">Mentor: <b>Deivhook</b></p>
+        <p>Formación integral en batería moderna: groove, independencia, lectura aplicada y preparación para sesión y directo profesional.</p>
+      </div>
+
+      <div class="school-card">
+        <div class="years">2022 — 2024 · 2 años</div>
+        <h4>Mentorización privada</h4>
+        <p class="with">Profesor: <b>Daniel Egido</b></p>
+        <p>Trabajo avanzado de coordinación, fraseo y lenguaje aplicado al jazz y a la música contemporánea.</p>
+      </div>
+    </div>
+
+    <div style="font-size:12px;font-weight:600;color:var(--ink-dim);text-transform:uppercase;letter-spacing:0.12em;margin-bottom:12px;">— Libros &amp; metodología de referencia</div>
+    <div class="books">
+      <div class="book"><div class="t">The New Breed</div><div class="a">Gary Chester</div></div>
+      <div class="book"><div class="t">Future Sounds</div><div class="a">David Garibaldi</div></div>
+      <div class="book"><div class="t">Wilcoxon</div><div class="a">Charles Wilcoxon</div></div>
+      <div class="book"><div class="t">Tierra y Síncopa</div><div class="a">Especialización Jazz</div></div>
+    </div>
+  </section>
+
+  <!-- HABILIDADES -->
+  <section class="section">
+    <div class="section-head">
+      <div>
+        <div class="section-eyebrow">— Toolkit</div>
+        <h2 class="section-title">Lo que <em>traigo</em> al aula</h2>
+      </div>
+    </div>
+
+    <div class="skills-grid">
+      <div class="skill-card">
+        <h5>Lectura &amp; teoría</h5>
+        <ul>
+          <li>Lectura de partituras</li>
+          <li>Solfeo rítmico</li>
+          <li>Transcripción aplicada</li>
+        </ul>
+      </div>
+      <div class="skill-card">
+        <h5>Tecnología en directo</h5>
+        <ul>
+          <li>Gestión de claqueta</li>
+          <li>Disparo de secuencias</li>
+          <li>Aprender a tocar con banda</li>
+        </ul>
+      </div>
+      <div class="skill-card">
+        <h5>Pedagogía</h5>
+        <ul>
+          <li>Plan de clases personalizado</li>
+          <li>Preparación para el directo</li>
+          <li>Motivación y objetivos claros</li>
+        </ul>
+      </div>
+      <div class="skill-card">
+        <h5>Estudio</h5>
+        <ul>
+          <li>Grabación con click</li>
+          <li>Lectura de partituras en sesión</li>
+          <li>Composición de ritmos &amp; fills</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="styles">
+      <span class="style primary">Rock</span>
+      <span class="style primary">Funk</span>
+      <span class="style primary">Jazz</span>
+      <span class="style primary">Pop</span>
+      <span class="style primary">Urbano</span>
+      <span class="style">Soul</span>
+      <span class="style">Indie</span>
+      <span class="style">Latin</span>
+    </div>
+  </section>
+
+  <!-- CTA / CONTACTO -->
+  <section class="cta" id="contacto">
+    <h2>¿Probamos?<br/>Hablemos de <em>música.</em></h2>
+    <div class="contact-list">
+      <a class="contact-row" href="mailto:alvaro@ejemplo.com">
+        <span class="lbl">Email</span>
+        <span class="val">alvaro.galan.are@gmail.com</span>
+      </a>
+      <a class="contact-row" href="https://wa.me/664517100" target="_blank" rel="noopener">
+        <span class="lbl">WhatsApp</span>
+        <span class="val">+34 664 517 100</span>
+      </a>
+      <a class="contact-row" href="https://www.instagram.com/gartik__/" target="_blank" rel="noopener">
+        <span class="lbl">Instagram</span>
+        <span class="val">@gartik__</span>
+      </a>
+      <a class="contact-row" href="https://www.tiktok.com/@gartik_drums" target="_blank" rel="noopener">
+        <span class="lbl">TIKTOK</span>
+        <span class="val">@gartik_drums</span>
+      </a>
+    </div>
+  </section>
+
+  <div class="footer">
+    <b>Álvaro</b> · Baterista &amp; profesor · Madrid · Mayo 2026
+  </div>
+
+</main>
+
+<!-- VIDEO MODAL -->
+<div class="video-modal" id="video-modal" data-no-print onclick="if(event.target===this){closeVideo()}">
+  <div class="video-modal-inner">
+    <button class="close" onclick="closeVideo()">×</button>
+    <iframe id="video-iframe" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+  </div>
+</div>
+
+<script type="text/babel" src="tweaks-panel.jsx"></script>
+<script type="text/babel" data-presets="env,react">
+const { useTweaks, TweaksPanel, TweakSection, TweakRadio, TweakColor, TweakText, TweakToggle } = window;
+
+const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+  "theme": "cream",
+  "accent": "#d2452a",
+  "headline": "Álvaro",
+  "showVideos": true,
+  "rotatePhoto": true
+}/*EDITMODE-END*/;
+
+function App() {
+  const [t, setTweak] = useTweaks(TWEAK_DEFAULTS);
+
+  React.useEffect(() => {
+    document.body.dataset.theme = t.theme;
+    document.documentElement.style.setProperty('--accent', t.accent);
+    const videos = document.getElementById('videos');
+    if (videos) videos.style.display = t.showVideos ? '' : 'none';
+    const photo = document.querySelector('.hero-photo');
+    if (photo) photo.style.transform = t.rotatePhoto ? 'rotate(2deg)' : 'rotate(0deg)';
+  }, [t]);
+
+  const accentOptions = ['#d2452a', '#2d6a4f', '#d4a83a', '#7c4dff'];
+
+  return (
+    <TweaksPanel title="Tweaks">
+      <TweakSection title="Aspecto">
+        <TweakRadio
+          label="Tema"
+          value={t.theme}
+          onChange={(v) => setTweak('theme', v)}
+          options={[
+            {label: "Cream", value: "cream"},
+            {label: "Mint", value: "mint"},
+            {label: "Paper", value: "paper"},
+          ]}
+        />
+        <TweakColor
+          label="Color de acento"
+          value={t.accent}
+          onChange={(v) => setTweak('accent', v)}
+          options={accentOptions}
+        />
+        <TweakToggle label="Foto inclinada" value={t.rotatePhoto} onChange={(v) => setTweak('rotatePhoto', v)} />
+      </TweakSection>
+
+      <TweakSection title="Secciones">
+        <TweakToggle label="Mostrar galería de vídeos" value={t.showVideos} onChange={(v) => setTweak('showVideos', v)} />
+      </TweakSection>
+    </TweaksPanel>
+  );
+}
+
+const root = document.createElement('div');
+document.body.appendChild(root);
+ReactDOM.createRoot(root).render(<App />);
+</script>
+
+<script>
+  // Scroll progress bar
+  const progress = document.getElementById('progress');
+  window.addEventListener('scroll', () => {
+    const h = document.documentElement;
+    const pct = (h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100;
+    progress.style.width = pct + '%';
+  }, { passive: true });
+
+  // Video modal
+  const modal = document.getElementById('video-modal');
+  const iframe = document.getElementById('video-iframe');
+  document.querySelectorAll('.media-card').forEach(card => {
+    card.addEventListener('click', () => {
+      const url = card.dataset.video;
+      if (url) {
+        iframe.src = url;
+        modal.classList.add('open');
+      } else {
+        // Friendly prompt to add a YouTube URL
+        const link = prompt('Pega aquí el enlace de YouTube (lo abrirá en el reproductor):');
+        if (link) {
+          const id = (link.match(/(?:v=|youtu\.be\/|embed\/)([\w-]{11})/) || [])[1];
+          if (id) {
+            card.dataset.video = `https://www.youtube.com/embed/${id}?autoplay=1`;
+            iframe.src = card.dataset.video;
+            modal.classList.add('open');
+          } else {
+            alert('No he reconocido el enlace. Prueba con uno de YouTube.');
+          }
+        }
+      }
+    });
+  });
+  function closeVideo() {
+    modal.classList.remove('open');
+    iframe.src = '';
+  }
+  window.closeVideo = closeVideo;
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeVideo(); });
+</script>
+
+<template id="__bundler_thumbnail">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+    <rect width="100" height="100" fill="#f5efe4"/>
+    <circle cx="50" cy="50" r="22" fill="none" stroke="#d2452a" stroke-width="3"/>
+    <circle cx="50" cy="50" r="6" fill="#d2452a"/>
+    <text x="50" y="86" font-family="serif" font-style="italic" font-size="11" fill="#1a1612" text-anchor="middle">CV</text>
+  </svg>
+</template>
+
+</body>
+</html>
